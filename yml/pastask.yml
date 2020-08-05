@@ -52,6 +52,18 @@
   shell: 'cat /var/plexguide/pgscan/plex.docker'
   register: plex_docker_user
 
+- name: Register Plex lib folder
+  shell: 'cat /var/plexguide/pgscan/plex.path'
+  register: plex_lib_folder
+
+- name: Register GDrive Client_ID
+  shell: 'cat /var/plexguide/pgscan/gdrive.id'
+  register: gdriveid
+  
+- name: Register GDrive Client_Secret
+  shell: 'cat /var/plexguide/pgscan/gdrive.secret'
+  register: gdrivesecret
+
 - name: Create mounted.bin for trash
   shell: 'touch $(cat /var/plexguide/server.hd.path)/unionfs/mounted.bin'
 
@@ -91,6 +103,10 @@
   with_items:
     - '/opt/appdata/plexautoscan/'
     - '/opt/appdata/plexautoscan/config'
+    - '/opt/appdata/plexautoscan/config/rclone'
+
+- name: copy rclone.conf 
+  shell: 'cp /opt/appdata/plexguide/rclone.conf /opt/appdata/plexautoscan/config/rclone'
 
 - name: Settings | Check if 'config.json' exists
   stat:
@@ -128,6 +144,14 @@
   - name: Register Plex Docker Image status
     shell: 'cat /var/plexguide/pgscan/plex.docker'
     register: plex_docker_user
+
+  - name: Register Plex lib folder
+    shell: 'cat /var/plexguide/pgscan/plex.path'
+    register: plex_lib_folder
+
+  - name: Register GDrive Client_ID
+    shell: 'cat /var/plexguide/pgscan/gdrive.id'
+    register: gdriveid
 
   when: not plex_autoscan_config.stat.exists
  
